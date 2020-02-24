@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>941</width>
+    <height>611</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>词频助手日语版V20200202</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>词频统计</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="1" column="1">
+         <widget class="QFrame" name="frame">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" rowspan="2" colspan="2">
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QPushButton" name="pushButton_clear">
+                <property name="text">
+                 <string>清空</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btn_wordcount">
+                <property name="text">
+                 <string>转换</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_exfile">
+                <property name="text">
+                 <string>导出</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_close">
+                <property name="text">
+                 <string>关闭</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QTextEdit" name="textEdit"/>
+              </item>
+              <item>
+               <widget class="QTableWidget" name="tableWidget">
+                <property name="verticalScrollBarPolicy">
+                 <enum>Qt::ScrollBarAlwaysOn</enum>
+                </property>
+                <property name="rowCount">
+                 <number>10</number>
+                </property>
+                <property name="columnCount">
+                 <number>8</number>
+                </property>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <column>
+                 <property name="text">
+                  <string>語数</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>表層形</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>品詞</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>活用型</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>活用形</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>基本形</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>読み</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>発音</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QProgressBar" name="progressBar">
+            <property name="value">
+             <number>24</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_4">
+       <attribute name="title">
+        <string>词列对比</string>
+       </attribute>
+       <widget class="QPushButton" name="pushButton_duibi">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>181</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;使用方法：直接单击对比，在弹出的对话框中选择需要对比的两个xls文件即可。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>对比</string>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="tableWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>181</width>
+          <height>511</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;显示的是AB对比文件单词的并集。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+       <widget class="QWidget" name="layoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>60</y>
+          <width>100</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3"/>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>随缘打赏</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您好，朋友，欢迎使用词频助手。&lt;/p&gt;&lt;p&gt;它是我业余时间开发的一个小工具。&lt;/p&gt;&lt;p&gt;从控件布局到处理逻辑，从素材积累到界面美化，从错误排查到打包发布，&lt;/p&gt;&lt;p&gt;花费了大量的时间和精力。&lt;/p&gt;&lt;p&gt;曾经，在地铁上，在午休中，在睡觉前，无时无刻不在构思各个功能的组成。&lt;/p&gt;&lt;p&gt;体会了一种前所未有的专注感觉，所有的精力好像透过放大镜的太阳光一样，&lt;/p&gt;&lt;p&gt;聚焦到一个光点上。随着慢慢的完善，这个光点在变亮，变热，冒烟。&lt;/p&gt;&lt;p&gt;最后有了一点点星火。&lt;/p&gt;&lt;p&gt;《男儿当自强》有句歌词“用我百点热，耀出千分光”，百点热不敢遑论，&lt;/p&gt;&lt;p&gt;只是希望这个小工具能散发一点点热，&lt;/p&gt;&lt;p&gt;统计出高频的常考词汇，批量翻译出陌生的未知词汇，&lt;/p&gt;&lt;p&gt;合理的分配学习的精力，科学的提高学习的效率。&lt;/p&gt;&lt;p&gt;如果您觉得词频助手确实还行，并希望能持续更新完善，&lt;/p&gt;&lt;p&gt;您的捐助将是作者持续更新的无尽动力！&lt;/p&gt;&lt;p&gt;软件免费，打赏随缘，四海之内，交个朋友。&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;词频助手最新版发布QQ群：587129532&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;微信：milestoners&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>941</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>模式切换</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="doc_in_action"/>
+    <addaction name="cp_in_action"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <action name="doc_in_action">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>文档导入模式</string>
+   </property>
+  </action>
+  <action name="cp_in_action">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>复制粘贴模式</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>词形还原</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>doc_in_action</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>doc_in_action</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cp_in_action</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>cp_in_action</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

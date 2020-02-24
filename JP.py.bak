@@ -1,0 +1,238 @@
+import os
+from PyQt5.QtWidgets import QFileDialog
+from PyQt5 import QtCore,QtWidgets,QtGui
+from PyQt5.QtCore import QThread, pyqtSignal,Qt
+from PyQt5.QtGui import QTextCharFormat, QTextDocument, QTextCursor,QColor,QFont,QBrush
+from PyQt5.QtWidgets import QMessageBox,QColorDialog,QTableWidgetItem
+from pydub import AudioSegment
+import sys
+from JP_UI import Ui_MainWindow
+from PyQt5.QtWidgets import QFileDialog
+from PyQt5 import QtCore,QtWidgets,QtGui
+from janome.tokenizer import Tokenizer
+from janome.analyzer import Analyzer
+from janome.tokenfilter import *
+from janome.charfilter import *
+import re
+import chardet
+kana = {
+    'ア':'あ', 
+    'イ':'い', 
+    'ウ':'う', 
+    'エ':'え', 
+    'オ':'お', 
+    'カ':'か', 
+    'キ':'き', 
+    'ク':'く', 
+    'ケ':'け', 
+    'コ':'こ', 
+    'サ':'さ', 
+    'シ':'し', 
+    'ス':'す', 
+    'セ':'せ', 
+    'ソ':'そ', 
+    'タ':'た', 
+    'チ':'ち', 
+    'ツ':'つ', 
+    'テ':'て', 
+    'ト':'と', 
+    'ナ':'な', 
+    'ニ':'に', 
+    'ヌ':'ぬ', 
+    'ネ':'ね', 
+    'ノ':'の', 
+    'ハ':'は', 
+    'ヒ':'ひ', 
+    'フ':'ふ', 
+    'ヘ':'へ', 
+    'ホ':'ほ', 
+    'マ':'ま', 
+    'ミ':'み', 
+    'ム':'む', 
+    'メ':'め', 
+    'モ':'も', 
+    'ヤ':'や', 
+    'ユ':'ゆ', 
+    'ヨ':'よ', 
+    'ラ':'ら', 
+    'リ':'り', 
+    'ル':'る', 
+    'レ':'れ', 
+    'ロ':'ろ', 
+    'ワ':'わ', 
+    'ヲ':'を', 
+    'ン':'ん', 
+    'ガ':'が', 
+    'ギ':'ぎ', 
+    'グ':'ぐ', 
+    'ゲ':'げ', 
+    'ゴ':'ご', 
+    'ザ':'ざ', 
+    'ジ':'じ', 
+    'ズ':'ず', 
+    'ゼ':'ぜ', 
+    'ゾ':'ぞ', 
+    'ダ':'だ', 
+    'ヂ':'ぢ', 
+    'ヅ':'づ', 
+    'デ':'で', 
+    'ド':'ど', 
+    'バ':'ば', 
+    'ビ':'び', 
+    'ブ':'ぶ', 
+    'ベ':'べ', 
+    'ボ':'ぼ', 
+    'パ':'ぱ', 
+    'ピ':'ぴ', 
+    'プ':'ぷ', 
+    'ペ':'ぺ', 
+    'ポ':'ぽ', 
+    'ャ':'ゃ', 
+    'ュ':'ゅ', 
+    'ョ':'ょ', 
+    'ー':'い', 
+    '*':'*',
+    'ッ':'っ',
+    'ィ':'い',
+    'ェ':'え',
+}
+def trans(words):
+    trans_words = ''
+    print(words)
+    trans_words = ''.join([kana[x] for x in list(words)])
+    print(trans_words)
+    return trans_words
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    # print(os.path.join(base_path, relative_path))
+    return os.path.join(base_path, relative_path)
+
+class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+    def __init__(self, parent=None):
+        super(MainWindow, self).__init__(parent)
+        self.setupUi(self)
+        self.btn_wordcount.clicked.connect(self.btn_wordcount_clicked)
+        self.pushButton_exfile.clicked.connect(self.pushButton_exfile_clicked)
+    def btn_wordcount_clicked(self):
+        file_path = self.openfile(MainWindow)
+        self.tableWidget.clear()
+        self.tableWidget.setRowCount(1)
+        self.tableWidget.setHorizontalHeaderLabels(['語数','表層形','品詞','活用型','活用形','基本形','読み','発音'])
+        self.thread = RunThread(file_path,1)
+        self.thread.words_signal.connect(self.add_words_to_table)
+        self.thread.start()
+        self.thread.proessbar_signal.connect(self.set_progressbar_value)
+    def set_progressbar_value(self, value, max,level,text):
+        if level == 1:
+            self.progressBar.setFormat('正在处理词频：'+text)
+        elif level == 2:
+            self.progressBar.setFormat('正在合成中...')
+        self.progressBar.setValue(value)
+        self.progressBar.setMaximum(max)
+        if value == max:
+            self.progressBar.setFormat('您的捐助将是作者不断更新的无尽动力')
+            self.progressBar.setValue(0)
+        return
+    def add_words_to_table(self,line,num,l1,l2,l3,l4,l5,l6,l7):
+        # print('add:',line,num,l1,l2,l3,l4,l5,l6,l7)
+        self.tableWidget.setItem(line , 0, QtWidgets.QTableWidgetItem(num))
+        self.tableWidget.setItem(line , 1, QtWidgets.QTableWidgetItem(l1))
+        self.tableWidget.setItem(line , 2, QtWidgets.QTableWidgetItem(l2))
+        self.tableWidget.setItem(line , 3, QtWidgets.QTableWidgetItem(l3))
+        self.tableWidget.setItem(line , 4, QtWidgets.QTableWidgetItem(l4))
+        self.tableWidget.setItem(line , 5, QtWidgets.QTableWidgetItem(l5))
+        self.tableWidget.setItem(line , 6, QtWidgets.QTableWidgetItem(l6))
+        self.tableWidget.setItem(line , 7, QtWidgets.QTableWidgetItem(l7))
+        rowPosition = self.tableWidget.rowCount()
+        # print(rowPosition)
+        self.tableWidget.insertRow(rowPosition)
+        self.tableWidget.scrollToBottom()
+    def pushButton_exfile_clicked(self):
+        self.savefile()
+class RunThread(QThread):
+    words_signal = pyqtSignal(int,str,str,str,str,str,str,str,str)
+    proessbar_signal = pyqtSignal(int,int,int,str)
+    def __init__(self,file_path,thread_id):
+        super(RunThread, self).__init__()
+        self.file_path = file_path
+        self.thread_id = thread_id
+        
+    def __del__(self):
+        self.wait() 
+
+    def run(self):
+        file_str = self.read_file(self.file_path)
+        print(file_str)
+        if file_str != '':
+            self.text2wordinfolist(file_str)
+
+
+    def read_file(self,file_path):
+        words=[]
+        raw_words=''
+        if '.txt' in file_path:
+            with open(file_path,'rb')as f:
+                raw_words = f.read() 
+                try:
+                    result = chardet.detect(raw_words)
+                    raw_words = raw_words.decode(encoding=result['encoding'])
+                    print(raw_words)
+                    return raw_words
+                except:
+                    QMessageBox.information(self, "警告", "文件编码有问题！请转换为utf8")
+                    return ''
+    
+    def text2wordinfolist(self,text):
+        stopwords = '。'
+        # text = u'の12時から朝6時まで。朝6時でも、お給料はいいんですよ。'
+        # char_filters = [UnicodeNormalizeCharFilter()]
+        # print(text)
+        text =  re.sub('\W+', '。', text)
+        tokenizer = Tokenizer()
+        token_filters = [CompoundNounFilter(),LowerCaseFilter()]
+        analyzer = Analyzer([], tokenizer, token_filters)
+        word_list =[]
+        all_word_lists =[]
+        progress=0
+        for token in analyzer.analyze(text):
+            self.proessbar_signal.emit(64,100,1,token.surface) 
+            word_list.append(token.surface)
+            word_list.append(token.part_of_speech)
+            word_list.append(token.infl_type)
+            word_list.append(token.infl_form)
+            word_list.append(token.base_form)
+            word_list.append(token.reading)
+            word_list.append(token.phonetic)
+            all_word_lists.append(word_list)
+            print(word_list)
+            word_list =[]
+            progress=progress+1
+            self.proessbar_signal.emit(99,100,1,token.surface) 
+        d={}
+        word_list=[]
+        for key in all_word_lists: 
+            d[key[0]] = d.get(key[0], 0) + 1
+        l1=(sorted(d.items(), key = lambda x: x[1], reverse = True))
+        l2=[w for w in l1 if w[0] not in stopwords]
+        print(l1)
+        print(l2)
+        line = 0
+        for l in l2:
+            for wordinfo in all_word_lists:
+                # print(wordinfo)
+                # print(len(wordinfo))
+                if l[0] == wordinfo[0]:
+                    print(line,wordinfo[0],str(l[1]),wordinfo[1],wordinfo[2],wordinfo[3],wordinfo[4],wordinfo[5],wordinfo[6])
+                    self.words_signal.emit(line,wordinfo[0],str(l[1]),wordinfo[1],wordinfo[2],wordinfo[3],wordinfo[4],wordinfo[5],trans(wordinfo[6]))
+                    line = line + 1
+                    break
+            self.proessbar_signal.emit(line,len(l2),2,'') 
+        self.proessbar_signal.emit(len(l),len(l2),2,'') 
+if __name__ == '__main__':
+
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = MainWindow()
+    MainWindow.show()
+    sys.exit(app.exec_())
+    # print(trans('ニ'))
